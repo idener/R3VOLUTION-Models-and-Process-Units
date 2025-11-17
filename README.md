@@ -79,13 +79,27 @@ Each model can be imported and used independently:
 from Models.BLOOM_PM import MembraneProcessModel
 from Process_Units.RO import MembraneProcessModel as RO
 
-# Initialize model
-model = MembraneProcessModel()
+# Define feed characteristics 
+feed_flow_rate =10/3600  # m3/s (1 m3/h)
+feed_concentration_input = {
+    '2-MeTHF': 2.68,  # mg/L
+    'Xylose': 1000,  # mg/L
+    'Lignin': 0.15,  # mg/L 
+    'Na': 12900,  # mg/L 
+    'Glycoxyllic_acid': 4.08  # mg/L 
+}
 
-# Calculate water properties at 25°C
-props = model.water_properties(25)
-print(f"Density: {props['density']} kg/m³")
-print(f"Viscosity: {props['viscosity']} Pa·s")
+feed_concentration= { '2-MeTHF': feed_concentration_input['2-MeTHF']/100*0.867*1000*1000,  # mg/L
+                        'Xylose': feed_concentration_input['Xylose'],  # mg/L
+                        'Lignin': feed_concentration_input['Lignin']/100*1000*1000,  # mg/L 
+                        'Na': feed_concentration_input['Na']/1000,  # mg/L 
+                        'Glycoxyllic_acid': feed_concentration_input['Glycoxyllic_acid']/100*1000*1000  # mg/L 
+}
+
+# Create and solve the water reuse system
+system = MembraneProcessModel(feed_flow_rate, feed_concentration)
+system.solve_system()
+performance=system.get_system_performance()
 ```
 
 ## Author
