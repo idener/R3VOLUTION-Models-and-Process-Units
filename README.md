@@ -40,7 +40,6 @@ Enhanced membrane process model with detailed physical equations for:
 Comprehensive steel wastewater reuse system model including:
 - Multiple membrane processes for steel industry applications
 - Physical and chemical treatment units
-- Cost optimization and economic analysis
 - Temperature-dependent property calculations
 
 ### Felix_PM.py
@@ -54,14 +53,14 @@ Paper industry wastewater treatment model featuring:
 
 Individual process unit models that can be integrated into custom treatment trains:
 
-- **RO.py**: Reverse Osmosis - High-pressure membrane filtration for water purification
-- **NF.py**: Nanofiltration - Selective separation of multivalent ions and small organic molecules
-- **UF.py**: Ultrafiltration - Removal of macromolecules, colloids, and suspended solids
-- **MF.py**: Microfiltration - Particle and bacteria removal
-- **MD.py**: Membrane Distillation - Thermal desalination process
-- **BPED_4.py**: Bipolar Electrodialysis - Acid and base production from salt solutions
-- **Chemical Precipitation.py**: Chemical treatment for contaminant removal
-- **Neutralization.py**: pH adjustment and neutralization processes
+- **RO.py**: Reverse Osmosis
+- **NF.py**: Nanofiltration
+- **UF.py**: Ultrafiltration
+- **MF.py**: Microfiltration
+- **MD.py**: Membrane Distillation
+- **BPED_4.py**: Bipolar Electrodialysis
+- **Chemical Precipitation.py**
+- **Neutralization.py**
 
 ## Dependencies
 
@@ -76,28 +75,19 @@ matplotlib
 Each model can be imported and used independently:
 
 ```python
-from Models.BLOOM_PM import MembraneProcessModel
-from Process_Units.RO import MembraneProcessModel as RO
+from Models.Felix_PM import MembraneProcessModel
 
-# Define feed characteristics 
-feed_flow_rate =10/3600  # m3/s (1 m3/h)
-feed_concentration_input = {
-    '2-MeTHF': 2.68,  # mg/L
-    'Xylose': 1000,  # mg/L
-    'Lignin': 0.15,  # mg/L 
-    'Na': 12900,  # mg/L 
-    'Glycoxyllic_acid': 4.08  # mg/L 
+# Define feed characteristics (typical pulp & paper mill wastewater)
+feed_flow_rate = 40/3600  # m3/s (360 m3/h)
+feed_concentration = {
+    'fibers_inorganics': 5000,  # mg/L
+    'pigments': 1000,  # mg/L
+    'organics': 500,  # mg/L (regulators, brighteners, biocides)
+    'brine': 2000  # mg/L (dissolved salts)
 }
 
-feed_concentration= { '2-MeTHF': feed_concentration_input['2-MeTHF']/100*0.867*1000*1000,  # mg/L
-                        'Xylose': feed_concentration_input['Xylose'],  # mg/L
-                        'Lignin': feed_concentration_input['Lignin']/100*1000*1000,  # mg/L 
-                        'Na': feed_concentration_input['Na']/1000,  # mg/L 
-                        'Glycoxyllic_acid': feed_concentration_input['Glycoxyllic_acid']/100*1000*1000  # mg/L 
-}
 
-# Create and solve the water reuse system
-system = MembraneProcessModel(feed_flow_rate, feed_concentration)
+system = MembraneProcessModel(feed_flow_rate, feed_composition)
 system.solve_system()
 performance=system.get_system_performance()
 ```
